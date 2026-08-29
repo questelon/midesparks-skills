@@ -4,18 +4,19 @@
     "name": "midesparks"
   },
   "metadata": {
-    "description": "Nine skills for Claude Code: intelligent model routing, running several skills at once, persistent goal loops, and keeping an assistant honest about what it has actually checked.",
-    "version": "1.1.0",
+    "description": "Seven skills for Claude Code: durable project memory that survives compaction, intelligent model routing, running several skills at once, and keeping an assistant honest about what it has actually checked.",
+    "version": "1.2.0",
     "repository": "https://github.com/Midesparks/midesparks-skills"
   },
   "plugins": [
     {
       "name": "midesparks-skills",
       "source": "./",
-      "description": "Nine skills built while running a live production app solo. auto-model: score a task and route it to the right Claude model, then explain the routing. merge: run several skills together as one unified execution rather than in sequence. goal: keep working until a success condition is actually met, not until one attempt finishes. model / compact: manual model selection and context compression. check-first: read the artefact that defines a mechanism before explaining it or handing over a procedure. deep-check: audit an entire existing project line by line without faking completeness. release-audit: verify a release actually contains what you think before it reaches users. layman-explain: explain technical, legal and financial things plainly without softening the real risk.",
-      "version": "1.1.0",
+      "description": "Seven skills built while running a live production app solo. project-memory: write decisions and corrections to durable memory the moment they happen, with SessionStart/PreCompact/SessionEnd hooks and a generated memory tree. check-first: read the artefact that defines a mechanism before explaining it or handing over a procedure. auto-model: score a task and route it to the right Claude model, then show the routing. merge: run several skills together as one unified execution rather than in sequence. deep-check: audit an entire existing project line by line without faking completeness. release-audit: verify a release actually contains what you think before it reaches users. layman-explain: explain technical, legal and financial things plainly without softening the real risk.",
+      "version": "1.2.0",
       "metadata": {
         "categories": [
+          "memory",
           "model-routing",
           "orchestration",
           "verification",

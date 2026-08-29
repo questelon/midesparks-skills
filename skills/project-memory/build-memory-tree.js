@@ -1,0 +1,197 @@
+#!/usr/bin/env node
+/**
+ * Builds MEMORY-TREE.md - a navigable map of every memory file.
+ *
+ * Generated, never hand-written. A hand-maintained tree goes stale the moment
+ * a memory is added and then quietly lies, which is the failure this whole
+ * memory system exists to stop. Re-run it whenever memories change.
+ *
+ * It also reports what it could NOT place, links that point nowhere, and
+ * memories nothing links to - so gaps are visible instead of silently absent.
+ */
+
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+
+const MEM = process.argv[2]
+  || process.env.CLAUDE_MEMORY_DIR
+  || path.join(os.homedir(), '.claude', 'projects',
+       process.cwd().replace(/[^a-zA-Z0-9]/g, '-'), 'memory');
+const OUT = path.join(MEM, 'MEMORY-TREE.md');
+
+/* Branches are ordered: the first rule that matches a memory wins, so put the
+ * specific subjects above the general ones. */
+const BRANCHES = [
+  { key: 'product',   title: 'The product',
+    blurb: 'Whatever is actually shipped and used.',
+    match: /product|app|release|ship|version|deploy|bug|feature|user|customer/i },
+  { key: 'company',   title: 'The company',
+    blurb: 'Legal, compliance, registrations, identity.',
+    match: /compan|legal|complian|registrat|entity|tax|contract|brand|domain/i },
+  { key: 'money',     title: 'Money',
+    blurb: 'Banking, payment rails, revenue, what is owed and unpaid.',
+    match: /money|bank|payment|payout|revenue|invoic|pricing|cost|budget|spend/i },
+  { key: 'infra',     title: 'Tooling and infrastructure',
+    blurb: 'How the workspace itself is set up. Read before changing it.',
+    match: /memory|config|skill|hook|credential|password|secret|session|plugin|script/i },
+  { key: 'working',   title: 'How the user wants the work done',
+    blurb: 'Standing instructions and corrections. These bind every task.',
+    match: /^feedback-|^user-|instruction|preference|correction/i },
+  { key: 'scheduled', title: 'Scheduled and recurring',
+    blurb: 'Jobs that run without anyone present.',
+    match: /scheduled|recurring|cron|digest|checkin|reminder/i },
+  { key: 'research',  title: 'Research and reference',
+    blurb: 'Answers looked up once so they are not looked up again.',
+    match: /^reference-|research|comparison|options|alternative/i },
+];
+
+const CLOSED = /(resolved|superseded|closed|no longer|already done|complete)/i;
+const OPEN   = /(paused|outstanding|still|not done|unfinished|pending|blocked|deferred|must be|needs?|before .* live|open)/i;
+
+function read(file) {
+  const text = fs.readFileSync(path.join(MEM, file), 'utf8');
+  const grab = (k) => {
+    const m = text.match(new RegExp('^' + k + ':\\s*(.+)$', 'm'));
+    if (!m) return '';
+    let v = m[1].trim();
+    if ((v[0] === '"' && v.endsWith('"')) || (v[0] === "'" && v.endsWith("'"))) v = v.slice(1, -1);
+    return v;
+  };
+  /* Links come in two shapes: [[slug]] and [[label|target]]. Take the target,
+   * and treat anything that looks like a file path as a pointer out of the
+   * memory folder rather than a memory that has gone missing. */
+  const links = [...text.matchAll(/\[\[([^\]]+)\]\]/g)]
+    .map((m) => {
+      const raw = m[1].trim();
+      const target = raw.includes('|') ? raw.split('|').pop().trim() : raw;
+      return { target, external: /[\\/]/.test(target) || /\.md$/i.test(target) };
+    })
+    .filter((l) => !l.external)
+    .map((l) => l.target);
+  return {
+    slug: file.replace(/\.md$/, ''),
+    file,
+    desc: grab('description'),
+    type: grab('  type') || grab('type'),
+    links: [...new Set(links)],
+    mtime: fs.statSync(path.join(MEM, file)).mtimeMs,
+  };
+}
+
+const files = fs.readdirSync(MEM)
+  .filter((f) => f.endsWith('.md') && !/^MEMORY(-TREE)?\.md$/i.test(f));
+const notes = files.map(read);
+const bySlug = new Map(notes.map((n) => [n.slug, n]));
+
+/* Which branch each memory belongs to. */
+const placed = new Map(BRANCHES.map((b) => [b.key, []]));
+const unplaced = [];
+for (const n of notes) {
+  const hay = n.slug + ' ' + n.desc;
+  const b = BRANCHES.find((br) => br.match.test(hay));
+  if (b) placed.get(b.key).push(n); else unplaced.push(n);
+}
+
+/* Link health. */
+const inbound = new Map(notes.map((n) => [n.slug, 0]));
+const broken = [];
+for (const n of notes) {
+  for (const l of n.links) {
+    if (bySlug.has(l)) inbound.set(l, inbound.get(l) + 1);
+    else broken.push({ from: n.slug, to: l });
+  }
+}
+const hubs = [...inbound.entries()].sort((a, b) => b[1] - a[1]).filter(([, c]) => c > 1).slice(0, 10);
+const orphans = notes.filter((n) => inbound.get(n.slug) === 0 && n.links.length === 0);
+
+const status = (n) => (CLOSED.test(n.desc) ? 'done' : OPEN.test(n.desc) ? 'OPEN' : '');
+const age = (m) => {
+  const d = Math.floor((Date.now() - m) / 86400000);
+  return d === 0 ? 'today' : d === 1 ? 'yesterday' : d + 'd';
+};
+
+const L = [];
+const w = (s) => L.push(s === undefined ? '' : s);
+
+w('# Memory tree');
+w();
+w('Generated by `build-memory-tree.js` - do not edit by hand, it is overwritten.');
+w('Re-run after adding memories: `node ~/.claude/skills/project-memory/build-memory-tree.js`');
+w();
+w(`${notes.length} memories. \`MEMORY.md\` is the flat index; this is the map.`);
+w('`OPEN` means the description still reads as unfinished.');
+w();
+
+for (const b of BRANCHES) {
+  const list = placed.get(b.key).sort((x, y) => x.slug.localeCompare(y.slug));
+  if (!list.length) continue;
+  const open = list.filter((n) => status(n) === 'OPEN').length;
+  w(`## ${b.title}`);
+  w();
+  w(`*${b.blurb}*  — ${list.length} memories, ${open} still open`);
+  w();
+  for (const n of list) {
+    const s = status(n);
+    const tag = s === 'OPEN' ? ' **[OPEN]**' : s === 'done' ? ' _(done)_' : '';
+    const d = n.desc.length > 150 ? n.desc.slice(0, 147) + '...' : n.desc;
+    w(`- **[${n.slug}](${n.file})**${tag} — ${d || '_no description_'}`);
+  }
+  w();
+}
+
+if (unplaced.length) {
+  w('## Not yet placed on the tree');
+  w();
+  w('*No branch rule matched these. Add a rule in `build-memory-tree.js` or rename them.*');
+  w();
+  unplaced.forEach((n) => w(`- **[${n.slug}](${n.file})** — ${n.desc || '_no description_'}`));
+  w();
+}
+
+w('## Where to start reading');
+w();
+if (hubs.length) {
+  w('The memories most often referenced by others - the load-bearing ones:');
+  w();
+  hubs.forEach(([slug, c]) => {
+    const n = bySlug.get(slug);
+    w(`- **[${slug}](${slug}.md)** — linked from ${c} others. ${n ? n.desc.slice(0, 90) : ''}`);
+  });
+  w();
+}
+
+const recent = notes.slice().sort((a, b) => b.mtime - a.mtime).slice(0, 8);
+w('Most recently changed - what the last sessions were doing:');
+w();
+recent.forEach((n) => w(`- [${n.slug}](${n.file}) — ${age(n.mtime)}`));
+w();
+
+w('## Health');
+w();
+w(`- ${notes.length} memories, ${notes.filter((n) => status(n) === 'OPEN').length} reading as open`);
+w(`- ${orphans.length} isolated (nothing links to them, they link to nothing)`);
+w(`- ${broken.length} links point at a memory that does not exist`);
+w();
+if (broken.length) {
+  w('Links pointing nowhere - either the memory was never written, or it was renamed:');
+  w();
+  broken.slice(0, 20).forEach((b) => w(`- \`${b.from}\` → \`[[${b.to}]]\``));
+  if (broken.length > 20) w(`- ...and ${broken.length - 20} more`);
+  w();
+}
+if (orphans.length) {
+  w('Isolated memories - worth linking into the tree so they get recalled in context:');
+  w();
+  orphans.slice(0, 20).forEach((n) => w(`- [${n.slug}](${n.file})`));
+  if (orphans.length > 20) w(`- ...and ${orphans.length - 20} more`);
+  w();
+}
+
+fs.writeFileSync(OUT, L.join('\n') + '\n', 'utf8');
+
+process.stdout.write(
+  `MEMORY-TREE.md written: ${notes.length} memories, ` +
+  `${BRANCHES.filter((b) => placed.get(b.key).length).length} branches, ` +
+  `${unplaced.length} unplaced, ${broken.length} broken links, ${orphans.length} isolated\n`
+);

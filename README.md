@@ -1,6 +1,6 @@
 # midesparks-skills
 
-Nine skills for Claude Code, built while running a live production app as a
+Seven skills for Claude Code, built while running a live production app as a
 one-person company. Each one exists because something went wrong and needed a
 rule that would survive being forgotten.
 
@@ -13,29 +13,27 @@ rule that would survive being forgotten.
 
 ## What's in here
 
-### `auto-model`
-Score a task across reasoning depth, stakes and complexity, route it to the
-right Claude model, run it there, and show a routing card so the logic is
-visible. The difference between a gear selector and an automatic gearbox.
-
-### `merge`
-Run several skills together as one unified execution rather than one after
-another. `goal` + `auto-model` is the strongest pairing: persistent work with
-the model re-chosen at every cycle.
-
-### `goal`
-Keep working until the success condition is actually met. Plan, execute, check,
-loop. Never stops after one attempt.
-
-### `model` and `compact`
-Manual model selection, and context compression into a structured handoff.
+### `project-memory`
+Durable memory that survives compaction and session end. Write the decision, the
+correction, the constraint at the moment it happens — not when the task feels
+finished, by which point the moment has passed. Ships three hooks: a checkpoint
+at the two moments knowledge is destroyed, a session-start brief that prints
+where things stand before the first reply, and a generated memory tree that maps
+every memory into branches and reports its own gaps.
 
 ### `check-first`
 Read the artefact that defines a mechanism before explaining how it works or
 handing someone a procedure. Written after three corrections in one session,
-each caused by asserting when a one-second check was available. Includes a table
-of what settles what, and the question that catches advice drifting away from
-the goal it was meant to serve.
+each caused by asserting when a one-second check was available.
+
+### `auto-model`
+Score a task across reasoning depth, stakes and complexity, route it to the
+right Claude model, run it there, and show a routing card so the logic is
+visible.
+
+### `merge`
+Run several skills together as one unified execution rather than one after
+another, so they reinforce each other instead of taking turns.
 
 ### `deep-check`
 Audit an entire existing project line by line. Auditing a whole codebase is a

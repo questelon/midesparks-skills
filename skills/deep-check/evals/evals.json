@@ -3,13 +3,13 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Go through this whole project line by line and tell me anything that's wrong with it. Project path: C:\\Users\\PC\\AppData\\Local\\Temp\\claude\\D--Cowork-Homebase\\611b5a01-0f9e-45bf-b220-6f6cff37c8a5\\scratchpad\\audit-test-project",
+      "prompt": "Go through this whole project line by line and tell me anything that's wrong with it. Project path: ./fixtures/audit-test-project",
       "expected_output": "A ranked list of findings that catches: (1) the SQL injection in db.py's get_user_by_name via string concatenation, (2) the off-by-one bug in pricing.py's apply_bulk_discount where the comment says 'every 5th unit' but the code discounts every 1st/6th/11th unit, (3) the drifted MAX_UPLOAD_MB config between config.py (25) and config.json (10). Findings should be specific (file:line) with a concrete failure scenario, not vague.",
       "files": []
     },
     {
       "id": 2,
-      "prompt": "Can you thoroughly audit the lib/services directory of my mobile app for anything wrong? I want a real no-stone-unturned look, not just a skim. Project path: D:\\example workspace\\example-app_app\\example-app_app\\lib\\services",
+      "prompt": "Can you thoroughly audit the lib/services directory of my mobile app for anything wrong? I want a real no-stone-unturned look, not just a skim. Project path: ./example-app/lib/services",
       "expected_output": "A ranked list of real findings from an actual production Flutter/Dart services directory. Should state what was excluded from scope (if anything) and should not fabricate issues that aren't really there — quality judged qualitatively by the user reviewing the findings against the real code.",
       "files": []
     }
