@@ -1,6 +1,6 @@
 # midesparks-skills
 
-Four skills for Claude Code, built while running a live production app as a
+Nine skills for Claude Code, built while running a live production app as a
 one-person company. Each one exists because something went wrong and needed a
 rule that would survive being forgotten.
 
@@ -12,6 +12,23 @@ rule that would survive being forgotten.
 ```
 
 ## What's in here
+
+### `auto-model`
+Score a task across reasoning depth, stakes and complexity, route it to the
+right Claude model, run it there, and show a routing card so the logic is
+visible. The difference between a gear selector and an automatic gearbox.
+
+### `merge`
+Run several skills together as one unified execution rather than one after
+another. `goal` + `auto-model` is the strongest pairing: persistent work with
+the model re-chosen at every cycle.
+
+### `goal`
+Keep working until the success condition is actually met. Plan, execute, check,
+loop. Never stops after one attempt.
+
+### `model` and `compact`
+Manual model selection, and context compression into a structured handoff.
 
 ### `check-first`
 Read the artefact that defines a mechanism before explaining how it works or
