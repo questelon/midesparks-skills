@@ -1,6 +1,6 @@
 # midesparks-skills
 
-Seven skills for Claude Code, built while running a live production app as a
+Six skills for Claude Code, built while running a live production app as a
 one-person company. Each one exists because something went wrong and needed a
 rule that would survive being forgotten.
 
@@ -35,14 +35,6 @@ visible.
 Run several skills together as one unified execution rather than one after
 another, so they reinforce each other instead of taking turns.
 
-### `deep-check`
-Audit an entire existing project line by line. Auditing a whole codebase is a
-different job from reviewing a diff — there is no diff to anchor on, and the
-real risk is **false completeness**: skimming a directory listing, reading a few
-interesting files, and reporting as if everything had been read. This partitions
-along real module boundaries, fans out, verifies findings adversarially, and
-states plainly what was excluded.
-
 ### `release-audit`
 Check that a release actually contains what you think it contains, before it
 reaches users. Written after shipping a build whose fix had never reached a
@@ -57,8 +49,7 @@ hiding a recommendation.
 ## Why publish these
 
 They were built for my own problems, but the problems are not unusual:
-an assistant that guesses and corrects itself, an audit that quietly skips half
-the code, a release that ships without the fix, and an explanation that hides the risk behind jargon.
+an assistant that guesses and corrects itself, a release that ships without the fix, and an explanation that hides the risk behind jargon.
 
 ## Licence
 
