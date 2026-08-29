@@ -4,7 +4,7 @@
     "name": "midesparks"
   },
   "metadata": {
-    "description": "Skills for keeping an AI assistant honest: verify before advising, audit a whole codebase line by line, ship a release without breaking production, and write like a person.",
+    "description": "Skills for keeping an AI assistant honest: verify before advising, audit a whole codebase line by line, ship a release without breaking production, and explain things in plain language.",
     "version": "1.0.0",
     "repository": "https://github.com/Midesparks/midesparks-skills"
   },
@@ -12,7 +12,7 @@
     {
       "name": "midesparks-skills",
       "source": "./",
-      "description": "Five skills built while running a live production app solo. check-first: read the artefact that defines a mechanism before explaining it or handing over a procedure. deep-check: audit an entire existing project line by line without faking completeness. release-audit: verify a release actually contains what you think before it reaches users. layman-explain: explain technical, legal and financial things in plain language without softening the real risk. no-ai-slop: strip the tells that make writing read as machine-generated.",
+      "description": "Five skills built while running a live production app solo. check-first: read the artefact that defines a mechanism before explaining it or handing over a procedure. deep-check: audit an entire existing project line by line without faking completeness. release-audit: verify a release actually contains what you think before it reaches users. layman-explain: explain technical, legal and financial things in plain language without softening the real risk.",
       "version": "1.0.0",
       "metadata": {
         "categories": [

@@ -1,6 +1,6 @@
 # midesparks-skills
 
-Five skills for Claude Code, built while running a live production app as a
+Four skills for Claude Code, built while running a live production app as a
 one-person company. Each one exists because something went wrong and needed a
 rule that would survive being forgotten.
 
@@ -39,18 +39,11 @@ not as a mode to switch into when asked for "layman's terms". Simplifying the
 words must never mean softening a real risk, dropping a real number or date, or
 hiding a recommendation.
 
-### `no-ai-slop`
-Strip the tells that make writing read as machine-generated: em dashes as a
-rhythm crutch, banned vocabulary, binary contrasts, throat-clearing openers,
-importance puffery, chatbot closers. Uses a minimum-effective-edit approach that
-preserves the writer's real voice rather than flattening everything to one tone.
-
 ## Why publish these
 
 They were built for my own problems, but the problems are not unusual:
 an assistant that guesses and corrects itself, an audit that quietly skips half
-the code, a release that ships without the fix, an explanation that hides the
-risk behind jargon, and writing that reads like a machine.
+the code, a release that ships without the fix, and an explanation that hides the risk behind jargon.
 
 ## Licence
 
