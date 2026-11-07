@@ -28,12 +28,12 @@ description: >
 
 | Model | ID | Best For |
 |-------|-----|----------|
-| **Claude Opus 5** | `claude-opus-5` | Deepest reasoning, nuanced judgment, complex research, strategic decisions, architecture, high-stakes writing, ambiguous problems needing real insight |
-| **Claude Sonnet 5** | `claude-sonnet-5` | Fast + highly capable — coding, documents, moderate analysis, most professional work. The reliable all-rounder. |
-| **Claude Haiku 4.5** | `claude-haiku-4-5-20251001` | Fastest and lightest — quick Q&A, short summaries, classification, formatting, simple rewrites |
-| **Claude Fable 5** | `claude-fable-5` | Current Claude 5 family model. Profile still being established - route to it like any other, and update this row once compared. |
+| **Claude Opus 5.5** | `claude-opus-5-5` | Deepest reasoning, nuanced judgment, complex research, strategic decisions, architecture, high-stakes writing, ambiguous problems needing real insight |
+| **Claude Sonnet 5.5** | `claude-sonnet-5-5` | Fast + highly capable: coding, documents, moderate analysis, most professional work. The reliable all-rounder. |
+| **Claude Haiku 5.5** | `claude-haiku-5-5` | Fastest and lightest: quick Q&A, short summaries, classification, formatting, simple rewrites |
+| **Claude Fable 5.1** | `claude-fable-5-1` | Current Claude 5 family model. Profile still being established - route to it like any other, and update this row once compared. |
 
-*Fable 5 note: its strengths are not documented yet. Update the row above once you have compared it against Sonnet 5 on the same task.*
+*Model list checked 2026-11-07 against the running environment. Fable 5.1's strengths are not documented yet; update its row once compared against Sonnet 5.5 on the same task. When a new model family ships, update every copy of this skill (user skills, synced, and the midesparks-skills plugin repo).*
 
 ---
 
