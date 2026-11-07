@@ -6,7 +6,7 @@
   "metadata": {
     "description": "Six skills for Claude Code: durable project memory that survives compaction, intelligent model routing, running several skills at once, and keeping an assistant honest about what it has actually checked.",
     "version": "1.3.0",
-    "repository": "https://github.com/Midesparks/midesparks-skills"
+    "repository": "https://github.com/questelon/midesparks-skills"
   },
   "plugins": [
     {

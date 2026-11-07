@@ -7,7 +7,7 @@ rule that would survive being forgotten.
 ## Install
 
 ```
-/plugin marketplace add Midesparks/midesparks-skills
+/plugin marketplace add questelon/midesparks-skills
 /plugin install midesparks-skills@midesparks-skills
 ```
 
